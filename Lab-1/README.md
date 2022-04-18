@@ -44,7 +44,6 @@ show running-config
   <summary> Результат отображения текущей конфигурации </summary>
 
 ```
-
 Building configuration...
 
 Current configuration : 1080 bytes
@@ -148,16 +147,17 @@ b) Видно также, что в данной модели коммутато
 
 ```
 enable
-show startup-config
+Switch#show startup-config
+startup-config is not present
 ```
 </details>
 
-Содержимое файла startup-config хранится в так называемой долговременной памяти NVRAM коммутатора, и не пропадает при отключении питании, ее можно условно сравнить с жестким диском компьютера. Содержимое running-config копируется из NVRAM и хранится в RAM памяти, до тех пор пока включено питание. Изменения в running-config непосредственно влияют на работу коммутатора и могут пропасть после аварийного отключения или внезапного скачка напряжения в электрической сети, поэтому текущие настройки или важные изменения в конфигурации необходимо сохранять путем их записи в startup-config файл командой -> _Switch# copy running-config startup-config_      
+В ответ коомутатор сообщил, что файл конфигурации отсутствует, т.к. запись в NVRAM еще не осуществлялась. Содержимое файла startup-config хранится в так называемой долговременной памяти NVRAM коммутатора, и не пропадает при отключении питании, ее можно условно сравнить с жестким диском компьютера. Содержимое running-config копируется из NVRAM и хранится в RAM памяти, до тех пор пока включено питание. Изменения в running-config непосредственно влияют на работу коммутатора и могут пропасть после аварийного отключения или внезапного скачка напряжения в электрической сети, поэтому текущие настройки или важные изменения в конфигурации необходимо сохранять путем их записи в startup-config файл командой -> _Switch# copy running-config startup-config_      
 
-d)-e) Для удаленного подключения и управления коммутатором используют IP адресацию. Для этого используют, так называемй SVI, т.е. IP адрес назначенный на VLAN интерфейс.   В базовой конфигурации свитча он отсутствует и к тому же выключен. Об этом нам говорят строчки из выше приведенного running-config:
+d) Для удаленного подключения и управления коммутатором используют IP адресацию. Для этого используют, так называемй SVI, т.е. IP адрес назначенный на VLAN интерфейс для удаленного управления.   В базовой конфигурации свитча он отсутствует и к тому же выключен. Об этом нам говорят строчки из выше приведенного running-config:
 
 <details>
-  <summary> SVI info </summary>
+  <summary> SVI info (часть running-config)</summary>
 
 ```
 !
@@ -168,6 +168,190 @@ interface Vlan1
 ```
 </details>
 
-f)
+e) Изучение информации интерфейса Vlan 1
 
+Введем соответствующую команду
+
+___Switch#show interface vlan 1___
+
+<details>
+  <summary> Vlan 1 статус без подключения Уеруктуе кабеля </summary>
+
+```
+Vlan1 is administratively down, line protocol is down
+  Hardware is CPU Interface, address is 0030.a348.c494 (bia 0002.4a97.730c)
+  MTU 1500 bytes, BW 100000 Kbit, DLY 1000000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 21:40:21, output never, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     1682 packets input, 530955 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicast)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     563859 packets output, 0 bytes, 0 underruns
+     0 output errors, 23 interface resets
+     0 output buffer failures, 0 output buffers swapped out
+```
+</details>
+
+Также наблюдаем в первых строчках информацию о том, что интерфейс Vlan 1 выключен, интернет протокол выключен, МАС адрес данного интерфейса 00:30:a3:48:c4:94, максимальный размер пакетов 1500 бит, пропускная способность 100 Мбит и другая статистическая информация.
+
+f) Добавим к нашей схеме соединение с помощью Ethernet кабеля, используя со стороны свича интерфейс Fa0/6, а со стороны PC-A интерфейс сетевого адаптера NIC:
+
+![alt-текст](/Lab-1/adding_eth_cable.png "Ethernet подключение с помощью кабеля")
+
+Произведем повторный вывод информации о состоянии интерфейса Vlan 1 
+
+<details>
+  <summary> статус Vlan 1  после подключения Ethernet кабеля   </summary>
+
+```
+Switch# sh int vlan 1
+Vlan1 is up, line protocol is up
+  Hardware is CPU Interface, address is 0030.a348.c494 (bia 0030.a348.c494)
+  MTU 1500 bytes, BW 100000 Kbit, DLY 1000000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 21:40:21, output never, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     1682 packets input, 530955 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicast)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     563859 packets output, 0 bytes, 0 underruns
+     0 output errors, 23 interface resets
+     0 output buffer failures, 0 output buffers swapped out
+```
+</details>
+
+<details>
+  <summary> Статус порта fa0/6  после подключения Ethernet кабеля   </summary>
+  
+```
+Switch#sh int fa0/6
+FastEthernet0/6 is up, line protocol is up (connected)
+  Hardware is Lance, address is 0001.648c.3906 (bia 0001.648c.3906)
+ BW 100000 Kbit, DLY 1000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 100Mb/s
+  input flow-control is off, output flow-control is off
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     956 packets input, 193351 bytes, 0 no buffer
+     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 watchdog, 0 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     2357 packets output, 263570 bytes, 0 underruns
+     0 output errors, 0 collisions, 10 interface resets
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier
+     0 output buffer failures, 0 output buffers swapped out
+     
+```
+</details>     
+
+Наблюдаем в результате, что интерфейсы Vlan 1 и Fa0/6 со стороны свитча, а также интерфейс NIC на стороне PC-A стали активными, протоколы линии тоже. 
+
+
+g) Получение информации о версии прошивки ПО свитча
+
+для получения данной информации нужн ввести соответствующую команду:
+
+___Switch>show version___
+
+<details>
+   <summary> Информация о текущем ПО коммутатора Cisco 2960-24TT </summary>
+
+```Switch>sh version
+Cisco IOS Software, C2960 Software (C2960-LANBASEK9-M), Version 15.0(2)SE4, RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2013 by Cisco Systems, Inc.
+Compiled Wed 26-Jun-13 02:49 by mnguyen
+
+ROM: Bootstrap program is C2960 boot loader
+BOOTLDR: C2960 Boot Loader (C2960-HBOOT-M) Version 12.2(25r)FX, RELEASE SOFTWARE (fc4)
+
+Switch uptime is 39 minutes
+System returned to ROM by power-on
+System image file is "flash:c2960-lanbasek9-mz.150-2.SE4.bin"
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+cisco WS-C2960-24TT-L (PowerPC405) processor (revision B0) with 65536K bytes of memory.
+Processor board ID FOC1010X104
+Last reset from power-on
+1 Virtual Ethernet interface
+24 FastEthernet interfaces
+2 Gigabit Ethernet interfaces
+The password-recovery mechanism is enabled.
+
+64K bytes of flash-simulated non-volatile configuration memory.
+Base ethernet MAC Address       : 00:30:A3:48:C4:94
+Motherboard assembly number     : 73-10390-03
+Power supply part number        : 341-0097-02
+Motherboard serial number       : FOC10093R12
+Power supply serial number      : AZS1007032H
+Model revision number           : B0
+Motherboard revision number     : B0
+Model number                    : WS-C2960-24TT-L
+System serial number            : FOC1010X104
+Top Assembly Part Number        : 800-27221-02
+Top Assembly Revision Number    : A0
+Version ID                      : V02
+CLEI Code Number                : COM3L00BRA
+Hardware Board Revision Number  : 0x01
+
+
+Switch   Ports      Model              SW Version            SW Image
+
+*  1      26    WS-C2960-24TT-L       15.0(2)SE4            C2960-LANBASEK9-M
+
+
+Configuration register is 0xF
+```
+</details>
+
+Здесь находим следующую информацию - Cisco IOS 15.0.(2)SE4, название образа прошивки свитча - C2960-LANBASEK9-M, МAC адрес коммутатора - 00:30:A3:48:C4:94
+
+
+
+
+
+   
 
