@@ -175,7 +175,7 @@ e) Изучение информации интерфейса Vlan 1
 ___Switch#show interface vlan 1___
 
 <details>
-  <summary> Vlan 1 статус без подключения Уеруктуе кабеля </summary>
+  <summary> Vlan 1 статус без подключения Ethernet кабеля </summary>
 
 ```
 Vlan1 is administratively down, line protocol is down
@@ -237,42 +237,9 @@ Vlan1 is up, line protocol is up
 ```
 </details>
 
-<details>
-  <summary> Статус порта fa0/6  после подключения Ethernet кабеля   </summary>
-  
-```
-Switch#sh int fa0/6
-FastEthernet0/6 is up, line protocol is up (connected)
-  Hardware is Lance, address is 0001.648c.3906 (bia 0001.648c.3906)
- BW 100000 Kbit, DLY 1000 usec,
-     reliability 255/255, txload 1/255, rxload 1/255
-  Encapsulation ARPA, loopback not set
-  Keepalive set (10 sec)
-  Full-duplex, 100Mb/s
-  input flow-control is off, output flow-control is off
-  ARP type: ARPA, ARP Timeout 04:00:00
-  Last input 00:00:08, output 00:00:05, output hang never
-  Last clearing of "show interface" counters never
-  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
-  Queueing strategy: fifo
-  Output queue :0/40 (size/max)
-  5 minute input rate 0 bits/sec, 0 packets/sec
-  5 minute output rate 0 bits/sec, 0 packets/sec
-     956 packets input, 193351 bytes, 0 no buffer
-     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
-     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
-     0 watchdog, 0 multicast, 0 pause input
-     0 input packets with dribble condition detected
-     2357 packets output, 263570 bytes, 0 underruns
-     0 output errors, 0 collisions, 10 interface resets
-     0 babbles, 0 late collision, 0 deferred
-     0 lost carrier, 0 no carrier
-     0 output buffer failures, 0 output buffers swapped out
-     
-```
-</details>     
 
-Наблюдаем в результате, что интерфейсы Vlan 1 и Fa0/6 со стороны свитча, а также интерфейс NIC на стороне PC-A стали активными, протоколы линии тоже. 
+
+Наблюдаем в результате, что интерфейсы Vlan 1 со стороны свитча, а также интерфейс NIC на стороне PC-A стали активными, протоколы линии тоже. 
 
 
 g) Получение информации о версии прошивки ПО свитча
@@ -349,9 +316,128 @@ Configuration register is 0xF
 
 Здесь находим следующую информацию - Cisco IOS 15.0.(2)SE4, название образа прошивки свитча - C2960-LANBASEK9-M, МAC адрес коммутатора - 00:30:A3:48:C4:94
 
+h) Изучим выходную информацию и состояние интерфейса Fa0/6. Для получения данной информации нужн ввести соответствующую команду:
 
+___Switch# show inteface Fa0/6___ 
 
-
+<details>
+  <summary> Статус порта fa0/6  после подключения Ethernet кабеля   </summary>
+  
+```
+Switch#sh int fa0/6
+FastEthernet0/6 is up, line protocol is up (connected)
+  Hardware is Lance, address is 0001.648c.3906 (bia 0001.648c.3906)
+ BW 100000 Kbit, DLY 1000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 100Mb/s
+  input flow-control is off, output flow-control is off
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     956 packets input, 193351 bytes, 0 no buffer
+     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 watchdog, 0 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     2357 packets output, 263570 bytes, 0 underruns
+     0 output errors, 0 collisions, 10 interface resets
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier
+     0 output buffer failures, 0 output buffers swapped out
+     
+```
+</details>     
 
    
+* первой строке видим что интерфейс активен (FastEthernet0/6 is up)
+* для того что бы интерфейс стал активным достаточно подключить его к любому активному сетевому оборудованию, соответствующим кабелем
+* МАС адрес данного интерфейса -  0001.648c.3906 
+* Cкорость на данном интерфейсе - Full-duplex, 100Mb/s
 
+i)  Изучим параметры сети VLAN по умолчанию на коммутаторе для чего введем команду:
+
+___Switch# show vlan___
+
+<details>
+  <summary> Информация о состояние настроек vlan   </summary>
+  
+  ```
+  Switch#sh vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+1002 fddi  101002     1500  -      -      -        -    -        0      0   
+1003 tr    101003     1500  -      -      -        -    -        0      0   
+1004 fdnet 101004     1500  -      -      -        ieee -        0      0   
+1005 trnet 101005     1500  -      -      -        ibm  -        0      0   
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+
+```
+</details>
+
+Результирующая информация:
+
+* Какое имя присвоено сети VLAN 1 по умолчанию? -  _default_
+* Какие порты расположены в сети VLAN 1?  -  _Fa0/1-24, Gig0/1, Gig0/2_
+* Активна ли сеть VLAN 1? - да, Status -> _active_
+* К какому типу сетей VLAN принадлежит VLAN по умолчанию? - Type -> _enet (Ethernet)_
+
+j) Изучим flash-память. Введем в CLI соответствующую команду:
+
+___Switch# show flash___
+
+
+Switch#sh flash
+Directory of flash:/
+
+    1  -rw-     4670455          <no date>  2960-lanbasek9-mz.150-2.SE4.bin
+
+64016384 bytes total (59345929 bytes free)
+
+аналогичного результата можно добиться, если ввести другую команду:
+
+___Switch# dir flash:___
+
+Switch#dir flash:
+Directory of flash:/
+
+    1  -rw-     4670455          <no date>  2960-lanbasek9-mz.150-2.SE4.bin
+
+64016384 bytes total (59345929 bytes free)
+
+Видим в конце результирующей строки в обоих случаях выводится название файла прошивки:
+ 
+ * _2960-lanbasek9-mz.150-2.SE4.bin_
+ 
+ расширение (тип файла) _*.bin_ указывает на бинарный (двоичный характер) содержимого файла.
+ 
