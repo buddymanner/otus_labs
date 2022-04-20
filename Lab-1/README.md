@@ -252,7 +252,8 @@ ___Switch>show version___
 <details>
    <summary> Информация о текущем ПО коммутатора Cisco 2960-24TT </summary>
 
-```Switch>sh version
+```
+
 Cisco IOS Software, C2960 Software (C2960-LANBASEK9-M), Version 15.0(2)SE4, RELEASE SOFTWARE (fc1)
 Technical Support: http://www.cisco.com/techsupport
 Copyright (c) 1986-2013 by Cisco Systems, Inc.
@@ -312,10 +313,11 @@ Switch   Ports      Model              SW Version            SW Image
 
 
 Configuration register is 0xF
+
 ```
 </details>
 
-Здесь находим следующую информацию - Cisco IOS 15.0.(2)SE4, название образа прошивки свитча - C2960-LANBASEK9-M, МAC адрес коммутатора - 00:30:A3:48:C4:94
+Здесь находим следующую информацию - версию операционной системы Cisco IOS 15.0.(2)SE4, название образа прошивки свитча - C2960-LANBASEK9-M, МAC адрес коммутатора - 00:30:A3:48:C4:94
 
 h) Изучим выходную информацию и состояние интерфейса Fa0/6. Для получения данной информации нужн ввести соответствующую команду:
 
@@ -531,7 +533,9 @@ S1#
 
 Проверим и задокументируем конфигурацию коммутатора, протестируем сквозное соединение между компьютером PC-A и коммутатором S1, а также протестируем возможность удаленного управления коммутатором.
 
-Выведем текущие настройки коммутатора командой:
+#### Шаг 1. Отобразим конфигурацию коммутатора.
+
+a) Выведем текущие настройки коммутатора командой:
 
 ___S1# show runnig-config___
 
@@ -542,57 +546,128 @@ ___S1# show runnig-config___
 ```
 Building configuration...
 
-Current configuration : 2206 bytes
+Current configuration : 2073 bytes
 !
-version 15.2
-no service pad
-service timestamps debug datetime msec
-service timestamps log datetime msec
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
 service password-encryption
 !
 hostname S1
 !
-boot-start-marker
-boot-end-marker
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
 !
-enable secret 5 $1$mtvC$6NC.1VKr3p6bj7YGE.jNg0
-!
-no aaa new-model
-system mtu routing 1500 
 !
 !
 no ip domain-lookup
 !
-<output omitted>
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ switchport access vlan 99
+!
+interface FastEthernet0/2
+ switchport access vlan 99
+!
+interface FastEthernet0/3
+ switchport access vlan 99
+!
+interface FastEthernet0/4
+ switchport access vlan 99
+!
+interface FastEthernet0/5
+ switchport access vlan 99
+!
+interface FastEthernet0/6
+ switchport access vlan 99
+!
+interface FastEthernet0/7
+ switchport access vlan 99
+!
+interface FastEthernet0/8
+ switchport access vlan 99
+!
+interface FastEthernet0/9
+ switchport access vlan 99
+!
+interface FastEthernet0/10
+ switchport access vlan 99
+!
+interface FastEthernet0/11
+ switchport access vlan 99
+!
+interface FastEthernet0/12
+ switchport access vlan 99
+!
+interface FastEthernet0/13
+ switchport access vlan 99
+!
+interface FastEthernet0/14
+ switchport access vlan 99
+!
+interface FastEthernet0/15
+ switchport access vlan 99
+!
+interface FastEthernet0/16
+ switchport access vlan 99
+!
+interface FastEthernet0/17
+ switchport access vlan 99
+!
+interface FastEthernet0/18
+ switchport access vlan 99
+!
+interface FastEthernet0/19
+ switchport access vlan 99
+!
+interface FastEthernet0/20
+ switchport access vlan 99
+!
+interface FastEthernet0/21
+ switchport access vlan 99
+!
+interface FastEthernet0/22
+ switchport access vlan 99
+!
+interface FastEthernet0/23
+ switchport access vlan 99
 !
 interface FastEthernet0/24
  switchport access vlan 99
 !
 interface GigabitEthernet0/1
- switchport access vlan 99
+ switchport trunk allowed vlan 99
+ switchport mode trunk
 !
 interface GigabitEthernet0/2
- switchport access vlan 99
+ switchport trunk allowed vlan 99
+ switchport mode trunk
 !
 interface Vlan1
+ no ip address
+!
+interface Vlan99
  ip address 192.168.1.2 255.255.255.0
 !
 ip default-gateway 192.168.1.1
-ip http server
-ip http secure-server
 !
 banner motd ^C
-Unauthorized access is strictly prohibited. ^C
+ Unauthorized access is strictly prohibited. ^C
+!
+!
 !
 line con 0
- password 7 00071A150754
+ password 7  104D000A0618
  logging synchronous
  login
 line vty 0 4
- password 7 121A0C041104
+ password 7 14141B180F0B
  login
 line vty 5 15
- password 7 121A0C041104
+ password 7 14141B180F0B
  login
 !
 end
@@ -600,3 +675,117 @@ end
 
 ```
 </details>
+
+b) Проверим теперь параметры VLAN 99. Введем снова знакомую нам команду:
+
+___S1# show interface vlan 99___
+
+<details> Итоговое состояние интерфейса
+
+```
+Vlan99 is up, line protocol is up
+  Hardware is CPU Interface, address is 0030.a348.c401 (bia 0030.a348.c401)
+  Internet address is 192.168.1.2/24
+  MTU 1500 bytes, BW 100000 Kbit, DLY 1000000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 21:40:21, output never, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     1682 packets input, 530955 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicast)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     563859 packets output, 0 bytes, 0 underruns
+     0 output errors, 23 interface resets
+     0 output buffer failures, 0 output buffers swapped out
+<summary> Текущее  состояние  интерфейса Vlan 99 </details>
+
+```
+</details>
+
+Видим что IP SVI принадлежит  теперь Vlan 99
+```
+Какова полоса пропускания этого интерфейса? ----> ____100000 Кb/s (100 Mbit/s)_____
+
+В каком состоянии находится VLAN 99? -----> ___is up___
+
+В каком состоянии находится канальный протокол? ------> ___is up___
+
+```
+#### Шаг 2. Протестируйте сквозное соединение, отправив эхо-запрос.
+
+a) 	В командной строке коммутатора с помощью утилиты ping проверим связь сначала с IP адресом компьютера PC-A. Для этого введем команду: 
+
+
+___S1> ping 192.168.1.10___
+ 
+ Результат эхо-запроса.
+```
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/0 ms
+```
+Прим. В Sisco IOS результатом отклика является вывод определенных символов - это набор n-ого количества символов "!", в данном случае их 5, значит связь в сторону PC-A успешно прошла. 
+
+b) Теперь наоборот из командной строки компьютера PC-A отправим эхо-запрос на административный адрес интерфейса SVI коммутатора S1.
+
+___C:\> ping 192.168.1.2___
+
+Получим следующий результат:
+
+```
+C:\>ping 192.168.1.2
+
+Pinging 192.168.1.2 with 32 bytes of data:
+
+Request timed out.
+Reply from 192.168.1.2: bytes=32 time=1ms TTL=255
+Reply from 192.168.1.2: bytes=32 time<1ms TTL=255
+Reply from 192.168.1.2: bytes=32 time<1ms TTL=255
+
+Ping statistics for 192.168.1.2:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0
+    
+```
+
+Видим, также, что и в обратную сторону эхо-запрос проходит - значит между устройствами существует полноценная удаленная связь. 
+
+#### Шаг 3. Проверим удаленное управление коммутатором S1.
+
+для этого на компьютере PC-A запустим приложение, либо встроенную службу (зависит от ОС компьютера) telnet в качестве параметра используя IP адрес SVI коммутатора:
+
+
+___С:\telnet 192.168.1.2___
+
+a) Поскольку мы настраивали пароль для терминальной линии vty, то сначала свитч запросит у нас пароль на удаленный вход и этот пароль будет "cisco", после чего мы должны попасть в командную строку коммутатра: S1>
+b) затем после попытки перейти в привелигированный режим с помощью команды "enable", коммутатор запросит у нас еще один пароль - "class", после чего приглашение CLI изменится на ---> S1#,  после чего он будет готов к удаленной работе. По завершении работы в CLI нужно набрать "exit".
+
+На практике же вместо telnet, особенно если мы не уверены в защищенности линий предачи данных лучше конечно пользоваться другой службой - SSH, которая шифрует предаваемые данны в линию, а также нужно придумывать более сложные и длинные пароли  согласно современным требованиям системы безопасности.
+
+## Вопросы для повторения
+
+1.	Зачем необходимо настраивать пароль VTY для коммутатора? 
+- ___Для защиты от несанционированного доступа.___
+2.	Что нужно сделать, чтобы пароли не отправлялись в незашифрованном виде? 
+- ___Использовать программы удаленного доступа с шифрованием передаваемых данных, например, SS.___
+
+
+
+
+
+
+
+
+
+
+
+
