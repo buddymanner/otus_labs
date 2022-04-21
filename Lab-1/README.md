@@ -431,7 +431,7 @@ Directory of flash:/
 
 ___Switch# dir flash:___
 
-Switch#dir flash:
+Switch# dir flash:
 Directory of flash:/
 
     1  -rw-     4670455          <no date>  2960-lanbasek9-mz.150-2.SE4.bin
@@ -672,10 +672,9 @@ line vty 5 15
 !
 end
 
-
 ```
+
 </details>
-<<<<<<< HEAD
 
 b) Проверим теперь параметры VLAN 99. Введем снова знакомую нам команду:
 
