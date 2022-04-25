@@ -48,6 +48,7 @@
    </details>
    
    <details>
+   
    <summary> Настройка NIC узла  PC-B </summary>
       
    ![alt-text](ip_nic_pc-b.png)
