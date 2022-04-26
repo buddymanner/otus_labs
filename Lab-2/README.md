@@ -66,15 +66,76 @@ Switch#erase startup-config
 Switch#del vlan.dat  
 Switch#reload
 ```
-4. ## **Настройте базовые параметры каждого коммутатора.**
-*Откройте окно конфигурации*
+4. ## **Настроим последоательно базовые параметры каждого коммутатора.**
+*Откроем  CLI конфигурации коммутаторов S1 и S2*
 
-1. Настройте имена устройств в соответствии с топологией.
-1. Настройте IP-адреса, как указано в таблице адресации.
-1. Назначьте **cisco** в качестве паролей консоли и VTY.
-1. Назначьте **class** в качестве пароля доступа к привилегированному режиму EXEC.
+   1. Настроим имя  каждого коммутатора в соответствии с топологией.
+   1. Настройте соответственно их IP-адреса, как указано в таблице адресации.
+   1. Назначим **cisco** в качестве паролей консоли и VTY.
+   1. Назначим **class** в качестве пароля доступа к привилегированному режиму EXEC.
 
-*Закройте окно настройки.*
+<details>
+   
+   <summary> Настройка  коммутатора S1   </summary>
+      
+  ```
+   
+   Switch>ena
+   Switch#config
+   Switch(config)#hostname S1
+   S1#(config)interface vlan 1
+   S1#(config-if)ip address 192.168.1.11 255.255.255.0
+   S1#(config-if)exit 
+   S1(config)enable secret class
+   S1(config)# line con 0
+   S1(config-line)# password cisco
+   S1(config-line)# login
+   S1(config-line)# logging synchronous
+   S1(config-line)# exit
+   S1(config)#line vty 0-15
+   S1(config-line)password cisco
+   S1(config-line)login
+   S1(config-line)exit
+   S1(config)commit
+   S1(config)exit
+   S1#
+   
+   ```
+   
+</details>
+
+<details>
+   
+   <summary> Настройка  коммутатора S2   </summary>
+      
+  ```
+   
+   Switch>ena
+   Switch#config
+   Switch(config)#hostname S2
+   S2#(config)interface vlan 1
+   S2#(config-if)ip address 192.168.1.12 255.255.255.0
+   S2#(config-if)exit 
+   S2(config)enable secret class
+   S2(config)# line con 0
+   S2(config-line)# password cisco
+   S2(config-line)# login
+   S2(config-line)# logging synchronous
+   S2(config-line)# exit
+   S2(config)#line vty 0-15
+   S2(config-line)password cisco
+   S2(config-line)login
+   S2(config-line)exit
+   S2(config)commit
+   S2(config)exit
+   S2#
+   
+   ```
+   
+</details>
+
+*Закроем окна настроек коммутаторов.*
+
 1. ## **Изучение таблицы МАС-адресов коммутатора**
 Как только между сетевыми устройствами начинается передача данных, коммутатор выясняет МАС-адреса и строит таблицу.
 1. ### **Запишите МАС-адреса сетевых устройств.**
@@ -84,9 +145,9 @@ Switch#reload
 #### Вопрос:
 Назовите физические адреса адаптера Ethernet.
 
-MAC-адрес компьютера PC-A:
+MAC-адрес компьютера PC-A: ----> ___00:60:5C:DB:E5:D0___ 
 
-MAC-адрес компьютера PC-B:
+MAC-адрес компьютера PC-B: ----> ___00:0C:85:B3:5D:11___
 
 *Закройте окно командной строки.*
 
