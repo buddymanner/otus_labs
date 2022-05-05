@@ -253,21 +253,31 @@ S2(config)# ip default-gateway 192.168.10.1
 ## Часть 2 **Настройка сетей VLAN на коммутаторах.**
  ### Шаг 1 **Сконфигруриуйте VLAN 10.**
 Добавьте VLAN 10 на S1 и S2 и назовите VLAN - **Management.**
+<details>
+  <summary> Настройка описаний интерфейсов для S1 и S2:</summary>
+
 ```
 
 S1(config)# vlan 10
 
 S1(config-vlan)# name Management
 
- 
+-----------------------------------
 
 S2(config)# vlan 10
 
 S2(config-vlan)# name Management
 ```
+  </details>
+  
 
 ### Шаг 2 **Сконфигурируем SVI для VLAN 10.**
 Настройте IP-адрес в соответствии с таблицей адресации для SVI для VLAN 10 на S1 и S2. Включите интерфейсы SVI и предоставьте описание для интерфейса.
+
+  <details>
+  <summary> Настройка описаний интерфейсов для S1 и S2:</summary>
+  
+    
 ```
 S1(config)# interface vlan 10
 
@@ -277,7 +287,7 @@ S1(config-if)# description Management SVI
 
 S1(config-if)# no shutdown
 
- 
+-------------------------------- 
 
 S2(config)# interface vlan 10
 
@@ -287,31 +297,47 @@ S2(config-if)# ip address 192.168.10.202 255.255.255.0
 
 S2(config-if)# no shutdown
 ```
+  
+  </details>
+  
 ### Шаг 3. **Настройте VLAN 333 с именем Native на S1 и S2.**
+
+  <details>
+  <summary> Настройка Vlan 333  для S1 и S2:</summary>
+  
 
 ```
 S1(config)# vlan 333
 
 S1(config-vlan)# name Native
 
- 
+-------------------------------- 
 
 S2(config)# vlan 333
 
 S2(config-vlan)# name Native
 ```
+
+ </details>
+    
 ### Шаг 4 **Настроим VLAN 999 с именем ParkingLot на S1 и S2.**
+
+  <details>
+  <summary> Команды добавления шлюзов для S1 и S2:</summary>
+        
 ``` 
 S1(config-vlan)# vlan 999
 
 S1(config-vlan)# name ParkingLot
 
- 
+------------------------------------------
 
 S2(config-vlan)# vlan 999
 
 S2(config-vlan)# name ParkingLot
 ```
+  
+</details>
 
 ## Шаг 5. **Настройки безопасности коммутатора.**
    1. ### **Релизация магистральных соединений 802.1Q.**
