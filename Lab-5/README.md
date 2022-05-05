@@ -339,11 +339,30 @@ S2(config-vlan)# name ParkingLot
   
 </details>
 
-## Шаг 5. **Настройки безопасности коммутатора.**
-   1. ### **Релизация магистральных соединений 802.1Q.**
-      1. Настройте все магистральные порты Fa0/1 на обоих коммутаторах для использования VLAN 333 в качестве native VLAN.
-      1. Убедитесь, что режим транкинга успешно настроен на всех коммутаторах.
+## Часть 3. **Настройки безопасности коммутатора.**
+   ### Шаг 1. **Релизация магистральных соединений 802.1Q.**
 
+a). Настроим все магистральные порты Fa0/1 на обоих коммутаторах для использования VLAN 333 в качестве native VLAN.
+      
+```
+S1(config)# interface f0/1
+
+S1(config-if)# switchport mode trunk
+
+S1(config-if)# switchport trunk native vlan 333
+
+--------------------------------------------- 
+
+S2(config)# interface f0/1
+
+S2(config-if)# switchport mode trunk
+
+S2(config-if)# switchport trunk native vlan 333
+```
+
+b. Убедимся, что режим транкинга успешно настроен на всех коммутаторах.
+
+```
 S1# **show interface trunk**
 
 Port Mode Encapsulation Status Native vlan
@@ -361,7 +380,7 @@ Fa0/1 1,10,333,999
 Port Vlans in spanning tree forwarding state and not pruned
 
 Fa0/1 1,10,333,999
-
+-------------------------------------------------------------
 S2# **show interface trunk**
 
 Port Mode Encapsulation Status Native vlan
@@ -379,9 +398,23 @@ Fa0/1 1,10,333,999
 Port Vlans in spanning tree forwarding state and not pruned
 
 Fa0/1 1,10,333,999
+```
 
-1. Отключить согласование DTP F0/1 на S1 и S2. 
-1. Проверьте с помощью команды **show interfaces**.
+c. Отключим согласование DTP F0/1 на S1 и S2. 
+
+```
+S1(config)# interface f0/1
+
+S1(config-if)# switchport nonegotiate
+
+--------------------------------------------- 
+
+S2(config)# interface f0/1
+
+S2(config-if)# switchport nonegotiate
+```
+
+d. Проверим с помощью команды **show interfaces**.
 
 S1# **show interfaces f0/1 switchport | include Negotiation**
 
@@ -460,7 +493,8 @@ Fa0/24 disabled 999 auto auto 10/100BaseTX
 Gi0/1 disabled 999 auto auto 10/100/1000BaseTX
 
 Gi0/2 disabled 999 auto auto 10/100/1000BaseTX
-1. ### **Документирование и реализация функций безопасности порта.**
+
+  1. ### **Документирование и реализация функций безопасности порта.**
 Интерфейсы F0/6 на S1 и F0/18 на S2 настроены как порты доступа. На этом шаге вы также настроите безопасность портов на этих двух портах доступа.
 
 1. На S1, введите команду **show port-security interface f0/6**  для отображения настроек по умолчанию безопасности порта для интерфейса F0/6. Запишите свои ответы ниже.
