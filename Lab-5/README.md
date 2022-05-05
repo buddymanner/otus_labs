@@ -423,84 +423,149 @@ Negotiation of Trunking: Off
 S1# **show interfaces f0/1 switchport | include Negotiation**
 
 Negotiation of Trunking: Off
-1. ### **Настройка портов доступа**
-   1. На S1 настройте F0/5 и F0/6 в качестве портов доступа и свяжите их с VLAN 10.
-   1. На S2 настройте порт доступа Fa0/18 и свяжите его с VLAN 10.
-1. ### **Безопасность неиспользуемых портов коммутатора**
-   1. На S1 и S2 переместите неиспользуемые порты из VLAN 1 в VLAN 999 и отключите неиспользуемые порты.
-   1. Убедитесь, что неиспользуемые порты отключены и связаны с VLAN 999, введя команду  **show**.
+### Шаг 2.**Настройка портов доступа**
+   a) На S1 настройте F0/5 и F0/6 в качестве портов доступа и свяжите их с VLAN 10.
+   ```
+   S1(config)# interface range f0/5 – 6
 
-S1# **show interfaces status**
+S1(config-if)# switchport mode access
 
-Port Name Status Vlan Duplex Speed Type
+S1(config-if)# switchport access vlan 10
+```
+   b) На S2 настройте порт доступа Fa0/18 и свяжите его с VLAN 10.
+   ```
+   S2(config)# interface f0/18
 
-Fa0/1 Link to S2 connected trunk a-full a-100 10/100BaseTX
+S2(config-if)# switchport mode access
 
-Fa0/2 disabled 999 auto auto 10/100BaseTX
+S2(config-if)# switchport access vlan 10
+``
+### Шаг 3. **Безопасность неиспользуемых портов коммутатора**
+   a) На S1 и S2 переместите неиспользуемые порты из VLAN 1 в VLAN 999 и отключите неиспользуемые порты.
+   ```
+   S1(config)# interface range f0/2-4 , f0/7-24, g0/1-2
 
-Fa0/3 disabled 999 auto auto 10/100BaseTX
+   S1(config-if-range)# switchport mode access
 
-Fa0/4 disabled 999 auto auto 10/100BaseTX
+   S1(config-if-range)# switchport access vlan 999
 
-Fa0/5 Link to R1 connected 10 a-full a-100 10/100BaseTX
+   S1(config-if-range)# shutdown
 
-Fa0/6 Link to PC-A connected 10 a-full a-100 10/100BaseTX
+--------------------------------------------------------- 
 
-Fa0/7 disabled 999 auto auto 10/100BaseTX
+   S2(config)# interface range f0/2-17 , f0/19-24, g0/1-2
 
-Fa0/8 disabled 999 auto auto 10/100BaseTX
+   S2(config-if-range)# switchport mode access
 
-Fa0/9 disabled 999 auto auto 10/100BaseTX
+   S2(config-if-range)# switchport access vlan 999
 
-Fa0/10 disabled 999 auto auto 10/100BaseTX
+   S2(config-if-range)# shutdown
+   
+   b) Убедимся, что неиспользуемые порты отключены и связаны с VLAN 999, введя команду  **show**:
 
-<output omitted>
+   S1# **show interfaces status**
 
-S2# **show interfaces status**
+   Port Name Status Vlan Duplex Speed Type
 
-Port Name Status Vlan Duplex Speed Type
+   Fa0/1 Link to S2 connected trunk a-full a-100 10/100BaseTX
 
-Fa0/1 Link to S1 connected trunk a-full a-100 10/100BaseTX
+   Fa0/2 disabled 999 auto auto 10/100BaseTX
 
-Fa0/2 disabled 999 auto auto 10/100BaseTX
+   Fa0/3 disabled 999 auto auto 10/100BaseTX
 
-Fa0/3 disabled 999 auto auto 10/100BaseTX
+   Fa0/4 disabled 999 auto auto 10/100BaseTX
 
-<output omitted>
+   Fa0/5 Link to R1 connected 10 a-full a-100 10/100BaseTX
 
-Fa0/14 disabled 999 auto auto 10/100BaseTX
+   Fa0/6 Link to PC-A connected 10 a-full a-100 10/100BaseTX
 
-Fa0/15 disabled 999 auto auto 10/100BaseTX
+   Fa0/7 disabled 999 auto auto 10/100BaseTX
 
-Fa0/16 disabled 999 auto auto 10/100BaseTX
+   Fa0/8 disabled 999 auto auto 10/100BaseTX
 
-Fa0/17 disabled 999 auto auto 10/100BaseTX
+   Fa0/9 disabled 999 auto auto 10/100BaseTX
 
-Fa0/18 Link to PC-B connected 10 a-full a-100 10/100BaseTX
+   Fa0/10 disabled 999 auto auto 10/100BaseTX
 
-Fa0/19 disabled 999 auto auto 10/100BaseTX
+   <output omitted>
 
-Fa0/20 disabled 999 auto auto 10/100BaseTX
+   S2# **show interfaces status**
 
-Fa0/21 disabled 999 auto auto 10/100BaseTX
+   Port Name Status Vlan Duplex Speed Type
 
-Fa0/22 disabled 999 auto auto 10/100BaseTX
+   Fa0/1 Link to S1 connected trunk a-full a-100 10/100BaseTX
 
-Fa0/23 disabled 999 auto auto 10/100BaseTX
+   Fa0/2 disabled 999 auto auto 10/100BaseTX
 
-Fa0/24 disabled 999 auto auto 10/100BaseTX
+   Fa0/3 disabled 999 auto auto 10/100BaseTX
 
-Gi0/1 disabled 999 auto auto 10/100/1000BaseTX
+   <output omitted>
 
-Gi0/2 disabled 999 auto auto 10/100/1000BaseTX
+   Fa0/14 disabled 999 auto auto 10/100BaseTX
 
-  1. ### **Документирование и реализация функций безопасности порта.**
-Интерфейсы F0/6 на S1 и F0/18 на S2 настроены как порты доступа. На этом шаге вы также настроите безопасность портов на этих двух портах доступа.
+   Fa0/15 disabled 999 auto auto 10/100BaseTX
 
-1. На S1, введите команду **show port-security interface f0/6**  для отображения настроек по умолчанию безопасности порта для интерфейса F0/6. Запишите свои ответы ниже.
+   Fa0/16 disabled 999 auto auto 10/100BaseTX
 
+   Fa0/17 disabled 999 auto auto 10/100BaseTX
 
-|**Конфигурация безопасности порта по умолчанию**|
+   Fa0/18 Link to PC-B connected 10 a-full a-100 10/100BaseTX
+
+   Fa0/19 disabled 999 auto auto 10/100BaseTX
+
+   Fa0/20 disabled 999 auto auto 10/100BaseTX
+
+   Fa0/21 disabled 999 auto auto 10/100BaseTX
+
+   Fa0/22 disabled 999 auto auto 10/100BaseTX
+
+   Fa0/23 disabled 999 auto auto 10/100BaseTX
+
+   Fa0/24 disabled 999 auto auto 10/100BaseTX
+
+   Gi0/1 disabled 999 auto auto 10/100/1000BaseTX
+
+   Gi0/2 disabled 999 auto auto 10/100/1000BaseTX
+
+  ### Шаг 4. **Документирование и реализация функций безопасности порта.**
+
+     Интерфейсы F0/6 на S1 и F0/18 на S2 настроены как порты доступа. На этом шаге мы можем настроить безопасность портов на этих двух портах доступа.
+
+a) На S1, введeм команду **show port-security interface f0/6**  для отображения настроек по умолчанию безопасности порта для интерфейса F0/6. Запишите свои ответы ниже.
+     
+<details>
+  <summary> Вывод настроек безопасности порт Fa0/6 по умолчанию:</summary>
+ 
+```    
+S1# show port-security interface f0/6
+
+Port Security              : Disabled
+
+Port Status                : Secure-down
+
+Violation Mode             : Shutdown
+
+Aging Time                 : 0 mins
+
+Aging Type                 : Absolute
+
+SecureStatic Address Aging : Disabled
+
+Maximum MAC Addresses      : 1
+
+Total MAC Addresses        : 0
+
+Configured MAC Addresses   : 0
+
+Sticky MAC Addresses       : 0
+
+Last Source Address:Vlan   : 0000.0000.0000:0
+
+Security Violation Count   : 0
+```    
+
+**Конфигурация безопасности порта по умолчанию**
+  
 | :-: |
 |**Функция**|**Настройка по умолчанию**|
 |Защита портов||
@@ -510,7 +575,10 @@ Gi0/2 disabled 999 auto auto 10/100/1000BaseTX
 |Aging Type||
 |Secure Static Address Aging||
 |Sticky MAC Address||
-1. На S1 включите защиту порта на F0 / 6 со следующими настройками:
+    
+ </details>
+  
+b) На S1 включиv защиту порта на F0 / 6 со следующими настройками:
 - Максимальное количество записей MAC-адресов: **3**
 - Режим безопасности: **restrict**
 - Aging time: **60 мин.**
@@ -519,6 +587,7 @@ Gi0/2 disabled 999 auto auto 10/100/1000BaseTX
 
 S1# **show port-security interface f0/6**
 
+```
 Port Security : Enabled
 
 Port Status : Secure-up
@@ -542,6 +611,7 @@ Sticky MAC Addresses : 0
 Last Source Address:Vlan : 0022.5646.3411:10
 
 Security Violation Count : 0
+```     
 
 S1# **show port-security address**
 
@@ -563,13 +633,37 @@ Total Addresses in System (excluding one mac per port) : 0
 
 Max Addresses limit in System (excluding one mac per port) : 8192
 
-1. Включите безопасность порта для F0 / 18 на S2. Настройте каждый активный порт доступа таким образом, чтобы он автоматически добавлял адреса МАС, изученные на этом порту, в текущую конфигурацию.
-1. Настройте следующие параметры безопасности порта на S2 F / 18:
+c) Включим безопасность порта для F0 / 18 на S2. Настроим каждый активный порт доступа таким образом, чтобы он автоматически добавлял адреса МАС, изученные на этом порту, в текущую конфигурацию.
+     
+     ```
+     S2(config)# interface f0/18
+
+     S2(config-if)# switchport port-security
+
+     S2(config-if)# switchport port-security mac-address sticky
+     
+     ```
+     
+ d) Настроим следующие параметры безопасности порта на S2 - Fa0/18:
+     
 - Максимальное количество записей MAC-адресов: **2**
 - Тип безопасности: **Protect**
 - Aging time: **60 мин.**
-  1. Проверка функции безопасности портов на S2 F0/18.
+     
+ ```
+S2(config)# interface f0/18
 
+S2(config-if)# switchport port-security aging time 60
+
+S2(config-if)# switchport port-security maximum 2
+
+S2(config-if)# switchport port-security violation protect
+     
+```
+     
+  e) Проверим функции безопасности портов на S2 - Fa0/18.
+
+```
 S2# **show port-security interface f0/18**
 
 Port Security : Enabled
@@ -595,6 +689,7 @@ Sticky MAC Addresses : 0
 Last Source Address:Vlan : 0022.5646.3413:10
 
 Security Violation Count : 0
+```     
 
 S2# **show port-security address**
 
@@ -615,7 +710,9 @@ Vlan Mac Address Type Ports Remaining Age
 Total Addresses in System (excluding one mac per port) : 0
 
 Max Addresses limit in System (excluding one mac per port) : 8192
-1. ### **Реализовать безопасность DHCP snooping.**
+     
+### Шаг 5. **Реализовать безопасность DHCP snooping.**
+     
    1. На S2 включите DHCP snooping и настройте DHCP snooping во VLAN 10.
    1. Настройте магистральные порты на S2 как доверенные порты.
    1. Ограничьте ненадежный порт Fa0/18 на S2 пятью DHCP-пакетами в секунду.
