@@ -68,7 +68,7 @@ b) проинициализируем данные устройства
 
 <details>
   
-<summary> Config для роутера R1 </summary>
+<summary> Config-файл для роутера R1 </summary>
   
 ```
   
@@ -211,7 +211,7 @@ S2(config)# no ip domain-lookup
 3. Настроим описания интерфейса для портов, которые используются в S1 и S2:
 
 <details>
-  <summary> Настройка описаний интерфейсов для S1 и S2:</summary>
+  <summary> Настройка описаний интерфейсов для для S1 и S2:</summary>
   
 ```
 S1(config)# interface fa0/1
@@ -254,7 +254,7 @@ S2(config)# ip default-gateway 192.168.10.1
  ### Шаг 1 **Сконфигруриуйте VLAN 10.**
 Добавьте VLAN 10 на S1 и S2 и назовите VLAN - **Management.**
 <details>
-  <summary> Настройка описаний интерфейсов для S1 и S2:</summary>
+  <summary> Настройка описаний интерфейса Vlan 10 для S1 и S2:</summary>
 
 ```
 
