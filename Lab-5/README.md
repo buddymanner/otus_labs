@@ -362,9 +362,10 @@ S2(config)# interface f0/1
 S2(config-if)# switchport mode trunk
 
 S2(config-if)# switchport trunk native vlan 333
-  
+ 
 ```
-    </details>
+  
+</details>
     
     
 b. Убедимся, что режим транкинга успешно настроен на всех коммутаторах.
@@ -436,12 +437,13 @@ S2(config-if)# switchport nonegotiate
   
   </details>
   
-d. Проверим с помощью команды **show interfaces**.
+d. Проверим настроенную функцию с помощью команды **show interfaces**:
 
 <details>
   
   <summary>  Просмотр состояния магистральных портов на S1 и S2 в разрезе согласования: </summary>
-
+  
+```
 S1# show interfaces f0/1 switchport | include Negotiation
 
 Negotiation of Trunking: Off
@@ -451,28 +453,44 @@ Negotiation of Trunking: Off
 S2# show interfaces f0/1 switchport | include Negotiation
 
 Negotiation of Trunking: Off
+```
   
   </details>
   
 ### Шаг 2.**Настройка портов доступа**
-   
-   a) На S1 настройте F0/5 и F0/6 в качестве портов доступа и свяжите их с VLAN 10.
+
+  a) На S1 настроим F0/5 и F0/6 в качестве портов доступа и свяжем их с VLAN 10.
+  
+  <details>
+  <summary>  Настройка безопасности портов доступа на S1: </summary>
    
    ```
    S1(config)# interface range f0/5 – 6
 
-S1(config-if)# switchport mode access
+   S1(config-if)# switchport mode access
 
-S1(config-if)# switchport access vlan 10
-```
-   b) На S2 настройте порт доступа Fa0/18 и свяжите его с VLAN 10.
+   S1(config-if)# switchport access vlan 10
+  
+   ```
+  
+   </details>
+  
+   b) На S2 аналогично настроим порт доступа Fa0/18 и свяжем его с VLAN 10.
+   
+   <details>
+  
+   <summary>  Настройка безопасности порта на S2: </summary>
+   
    ```
    S2(config)# interface f0/18
 
-S2(config-if)# switchport mode access
+   S2(config-if)# switchport mode access
 
-S2(config-if)# switchport access vlan 10
-``
+   S2(config-if)# switchport access vlan 10 
+   ```
+  
+  </details>
+  
 ### Шаг 3. **Безопасность неиспользуемых портов коммутатора**
    a) На S1 и S2 переместите неиспользуемые порты из VLAN 1 в VLAN 999 и отключите неиспользуемые порты.
    ```
