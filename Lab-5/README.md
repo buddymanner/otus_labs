@@ -499,9 +499,10 @@ Negotiation of Trunking: Off
    <details>
   
    <summary>  Настройка безопасности неиспользуемых портов на S1 и S2: </summary>
+  
       
    ```
-   S1(config)# interface range f0/2-4 , fa0/7-24, g0/1-2
+   S1(config)# interface range f0/2-4 , fa0/7-24, gi0/1-2
 
    S1(config-if-range)# switchport mode access
 
@@ -511,7 +512,7 @@ Negotiation of Trunking: Off
 
    --------------------------------------------------------- 
 
-   S2(config)# interface range fa0/2-17 , fa0/19-24, g0/1-2
+   S2(config)# interface range fa0/2-17 , fa0/19-24, gi0/1-2
 
    S2(config-if-range)# switchport mode access
 
@@ -522,15 +523,16 @@ Negotiation of Trunking: Off
   
   </details>
   
+  
    b) Убедимся, что неиспользуемые порты отключены и связаны с VLAN 999:
    
-    <details>
-  
+         
    S1# **show interfaces status**
    
-    <details>
+   <details>
    
    <summary>  Настройка безопасности неиспользуемых портов на S1 и S2: </summary>
+  
       
    ```
    S1# show interfaces status
@@ -598,7 +600,8 @@ Negotiation of Trunking: Off
    Gi0/1 disabled 999 auto auto 10/100/1000BaseTX
 
    Gi0/2 disabled 999 auto auto 10/100/1000BaseTX
-   
+   ```
+     
   </details> 
   
 
@@ -880,4 +883,4 @@ S1# **show spanning-tree interface f0/6 detail**
 1. С точки зрения безопасности порта на S2, почему нет значения таймера для оставшегося возраста в минутах, когда было сконфигурировано динамическое обучение - sticky?
 1. Что касается безопасности порта на S2, если вы загружаете скрипт текущей конфигурации на S2, почему порту 18 на PC-B никогда не получит IP-адрес через DHCP?
 1. Что касается безопасности порта, в чем разница между типом абсолютного устаревания и типом устаревание по неактивности?
-© ã 2019 г. - гггг Корпорация Cisco и/или ее дочерние компании. Все права защищены. Открытая информация Cisco 	страница 11** 19**	www.netacad.com
+
