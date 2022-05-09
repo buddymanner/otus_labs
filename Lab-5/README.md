@@ -659,12 +659,30 @@ Security Violation Count   : 0
 |Secure Static Address Aging|**Disabled**|
 |Sticky MAC Address|**0**|
    
-b) На S1 включим защиту порта на F0 / 6 со следующими настройками:
+b) На S1 включим защиту порта на Fa0/6 со следующими настройками:
      
 - Максимальное количество записей MAC-адресов: **3**
 - Режим безопасности: **restrict**
 - Aging time: **60 мин.**
 - Aging type: **неактивный**
+     
+<details>
+  <summary> Включение режима безопасности и задание настроек безопасности для Fa0/6 на S1:</summary>
+  
+     
+```
+S1(config)# interface f0/18
+
+S1(config-if)# switchport port-security aging time 60
+
+S1(config-if)# switchport port-security maximum 3
+
+S1(config-if)# switchport port-security violation protect
+     
+```
+
+</details>
+     
   
  с) Выведем на экран и проверим заданные параметры  S1 F0/6:
 
@@ -724,7 +742,13 @@ Total Addresses in System (excluding one mac per port) : 0
 
 Max Addresses limit in System (excluding one mac per port) : 8192
 
-c) Включим безопасность порта для F0 / 18 на S2. Настроим каждый активный порт доступа таким образом, чтобы он автоматически добавлял адреса МАС, изученные на этом порту, в текущую конфигурацию.
+c) Включим безопасность порта для Fa0/18 на S2. Настроим порт доступа таким образом, чтобы он автоматически добавлял адреса МАС, изученные на этом порту, в текущую конфигурацию.
+     
+     
+ <details>
+   
+   <summary> Включение режима безопасности для Fa0/18 на S2:</summary>
+   
      
      ```
      S2(config)# interface f0/18
@@ -734,6 +758,9 @@ c) Включим безопасность порта для F0 / 18 на S2. Н
      S2(config-if)# switchport port-security mac-address sticky
      
      ```
+   
+ </details>  
+     
      
  d) Настроим следующие параметры безопасности порта на S2 - Fa0/18:
      
@@ -741,7 +768,11 @@ c) Включим безопасность порта для F0 / 18 на S2. Н
 - Тип безопасности: **Protect**
 - Aging time: **60 мин.**
      
- ```
+<details>
+  <summary> Настройка необходимого уровня безопасности для Fa0/18 на S2: </summary>
+   
+    
+```
 S2(config)# interface f0/18
 
 S2(config-if)# switchport port-security aging time 60
@@ -751,8 +782,16 @@ S2(config-if)# switchport port-security maximum 2
 S2(config-if)# switchport port-security violation protect
      
 ```
+    
+ </details>
+  
      
-  e) Проверим функции безопасности портов на S2 - Fa0/18.
+  e) Проверим функции безопасности портов на S2 - Fa0/18:
+     
+     
+ <details>
+    <summary> Вывод настроек безопасности порта Fa0/18 с заданными параметрами: </summary>
+ 
 
 ```
 S2# **show port-security interface f0/18**
@@ -781,6 +820,9 @@ Last Source Address:Vlan : 0022.5646.3413:10
 
 Security Violation Count : 0
 ```     
+ 
+</details>
+     
 
 S2# **show port-security address**
 
