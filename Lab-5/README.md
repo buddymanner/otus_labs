@@ -214,25 +214,25 @@ S2(config)# no ip domain-lookup
   <summary> Настройка описаний интерфейсов для S1 и S2:</summary>
   
 ```
-S1(config)# interface f0/1
+S1(config)# interface fa0/1
 
 S1(config-if)# description Link to S2
 
-S1(config–if)# interface f0/5
+S1(config–if)# interface fa0/5
 
 S1(config-if)# description Link to R1
 
-S1(config–if)# interface f0/6
+S1(config–if)# interface fa0/6
 
 S1(config-if)# description Link to PC-A
 
  
 
-S2(config)# interface f0/1
+S2(config)# interface fa0/1
 
 S2(config-if)# description Link to S1
 
-S2(config–if)# interface f0/18
+S2(config–if)# interface fa0/18
 
 S2(config-if)# description Link to PC-B
 ```
@@ -275,7 +275,7 @@ S2(config-vlan)# name Management
 Настройте IP-адрес в соответствии с таблицей адресации для SVI для VLAN 10 на S1 и S2. Включите интерфейсы SVI и предоставьте описание для интерфейса.
 
   <details>
-  <summary> Настройка описаний интерфейсов для S1 и S2:</summary>
+  <summary> Настройка IP интерфейсов SVI c описанием для S1 и S2:</summary>
   
     
 ```
@@ -416,14 +416,14 @@ Fa0/1 1,10,333,999
 ```
    </details>
 
-c. Отключим согласование DTP F0/1 на S1 и S2. 
+c. Отключим согласование DTP Fa0/1 на S1 и S2. 
 
 <details>
   
   <summary> отключение согласования магистральных портов на S1 и S2: </summary>
 
 ```
-S1(config)# interface f0/1
+S1(config)# interface fa0/1
 
 S1(config-if)# switchport nonegotiate
 
@@ -444,13 +444,13 @@ d. Проверим настроенную функцию с помощью ко
   <summary>  Просмотр состояния магистральных портов на S1 и S2 в разрезе согласования: </summary>
   
 ```
-S1# show interfaces f0/1 switchport | include Negotiation
+S1# show interfaces fa0/1 switchport | include Negotiation
 
 Negotiation of Trunking: Off
   
 -----------------------------------------------------------------------  
 
-S2# show interfaces f0/1 switchport | include Negotiation
+S2# show interfaces fa0/1 switchport | include Negotiation
 
 Negotiation of Trunking: Off
 ```
@@ -459,13 +459,13 @@ Negotiation of Trunking: Off
   
 ### Шаг 2.**Настройка портов доступа**
 
-  a) На S1 настроим F0/5 и F0/6 в качестве портов доступа и свяжем их с VLAN 10.
+  a) На S1 настроим Fa0/5 и Fa0/6 в качестве портов доступа и свяжем их с VLAN 10.
   
   <details>
   <summary>  Настройка безопасности портов доступа на S1: </summary>
    
    ```
-   S1(config)# interface range f0/5 – 6
+   S1(config)# interface range fa0/5 – 6
 
    S1(config-if)# switchport mode access
 
@@ -482,7 +482,7 @@ Negotiation of Trunking: Off
    <summary>  Настройка безопасности порта на S2: </summary>
    
    ```
-   S2(config)# interface f0/18
+   S2(config)# interface fa0/18
 
    S2(config-if)# switchport mode access
 
@@ -492,9 +492,16 @@ Negotiation of Trunking: Off
   </details>
   
 ### Шаг 3. **Безопасность неиспользуемых портов коммутатора**
-   a) На S1 и S2 переместите неиспользуемые порты из VLAN 1 в VLAN 999 и отключите неиспользуемые порты.
+
+   a) На S1 и S2 переместим неиспользуемые порты из VLAN 1 в VLAN 999 и отключим их.
+   
+   
+   <details>
+  
+   <summary>  Настройка безопасности неиспользуемых портов на S1 и S2: </summary>
+      
    ```
-   S1(config)# interface range f0/2-4 , f0/7-24, g0/1-2
+   S1(config)# interface range f0/2-4 , fa0/7-24, g0/1-2
 
    S1(config-if-range)# switchport mode access
 
@@ -502,19 +509,31 @@ Negotiation of Trunking: Off
 
    S1(config-if-range)# shutdown
 
---------------------------------------------------------- 
+   --------------------------------------------------------- 
 
-   S2(config)# interface range f0/2-17 , f0/19-24, g0/1-2
+   S2(config)# interface range fa0/2-17 , fa0/19-24, g0/1-2
 
    S2(config-if-range)# switchport mode access
 
    S2(config-if-range)# switchport access vlan 999
 
    S2(config-if-range)# shutdown
+   ```
+  
+  </details>
+  
+   b) Убедимся, что неиспользуемые порты отключены и связаны с VLAN 999:
    
-   b) Убедимся, что неиспользуемые порты отключены и связаны с VLAN 999, введя команду  **show**:
-
+    <details>
+  
    S1# **show interfaces status**
+   
+    <details>
+   
+   <summary>  Настройка безопасности неиспользуемых портов на S1 и S2: </summary>
+      
+   ```
+   S1# show interfaces status
 
    Port Name Status Vlan Duplex Speed Type
 
@@ -539,8 +558,10 @@ Negotiation of Trunking: Off
    Fa0/10 disabled 999 auto auto 10/100BaseTX
 
    <output omitted>
+   
+   -----------------------------------------------------------
 
-   S2# **show interfaces status**
+   S2# show interfaces status
 
    Port Name Status Vlan Duplex Speed Type
 
@@ -577,8 +598,11 @@ Negotiation of Trunking: Off
    Gi0/1 disabled 999 auto auto 10/100/1000BaseTX
 
    Gi0/2 disabled 999 auto auto 10/100/1000BaseTX
+   
+  </details> 
+  
 
-  ### Шаг 4. **Документирование и реализация функций безопасности порта.**
+  ### Шаг 4. Документирование и реализация функций безопасности порта.
 
      Интерфейсы F0/6 на S1 и F0/18 на S2 настроены как порты доступа. На этом шаге мы можем настроить безопасность портов на этих двух портах доступа.
 
