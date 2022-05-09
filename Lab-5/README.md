@@ -323,7 +323,7 @@ S2(config-vlan)# name Native
 ### Шаг 4 **Настроим VLAN 999 с именем ParkingLot на S1 и S2.**
 
   <details>
-  <summary> Команды добавления шлюзов для S1 и S2:</summary>
+  <summary> Настройка Vlan 999  для S1 и S2:</summary>
         
 ``` 
 S1(config-vlan)# vlan 999
@@ -344,6 +344,10 @@ S2(config-vlan)# name ParkingLot
 
 a). Настроим все магистральные порты Fa0/1 на обоих коммутаторах для использования VLAN 333 в качестве native VLAN.
       
+<details>
+  
+  <summary> Настройка безопасности магистральных портов на S1 и S2: </summary>
+    
 ```
 S1(config)# interface f0/1
 
@@ -358,12 +362,19 @@ S2(config)# interface f0/1
 S2(config-if)# switchport mode trunk
 
 S2(config-if)# switchport trunk native vlan 333
+  
 ```
-
+    </details>
+    
+    
 b. Убедимся, что режим транкинга успешно настроен на всех коммутаторах.
 
+<details>
+  
+  <summary> Проверка состояния безопасности магистральных портов на S1 и S2: </summary>
+
 ```
-S1# **show interface trunk**
+S1# show interface trunk
 
 Port Mode Encapsulation Status Native vlan
 
@@ -380,7 +391,9 @@ Fa0/1 1,10,333,999
 Port Vlans in spanning tree forwarding state and not pruned
 
 Fa0/1 1,10,333,999
+  
 -------------------------------------------------------------
+  
 S2# **show interface trunk**
 
 Port Mode Encapsulation Status Native vlan
@@ -398,9 +411,15 @@ Fa0/1 1,10,333,999
 Port Vlans in spanning tree forwarding state and not pruned
 
 Fa0/1 1,10,333,999
+  
 ```
+   </details>
 
 c. Отключим согласование DTP F0/1 на S1 и S2. 
+
+<details>
+  
+  <summary> отключение согласования магистральных портов на S1 и S2: </summary>
 
 ```
 S1(config)# interface f0/1
@@ -412,19 +431,33 @@ S1(config-if)# switchport nonegotiate
 S2(config)# interface f0/1
 
 S2(config-if)# switchport nonegotiate
+  
 ```
-
+  
+  </details>
+  
 d. Проверим с помощью команды **show interfaces**.
 
-S1# **show interfaces f0/1 switchport | include Negotiation**
+<details>
+  
+  <summary>  Просмотр состояния магистральных портов на S1 и S2 в разрезе согласования: </summary>
+
+S1# show interfaces f0/1 switchport | include Negotiation
 
 Negotiation of Trunking: Off
+  
+-----------------------------------------------------------------------  
 
-S1# **show interfaces f0/1 switchport | include Negotiation**
+S2# show interfaces f0/1 switchport | include Negotiation
 
 Negotiation of Trunking: Off
+  
+  </details>
+  
 ### Шаг 2.**Настройка портов доступа**
+   
    a) На S1 настройте F0/5 и F0/6 в качестве портов доступа и свяжите их с VLAN 10.
+   
    ```
    S1(config)# interface range f0/5 – 6
 
