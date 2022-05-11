@@ -671,13 +671,13 @@ b) На S1 включим защиту порта на Fa0/6 со следующ
   
      
 ```
-S1(config)# interface f0/18
+S1(config)# interface fa0/6
 
 S1(config-if)# switchport port-security aging time 60
 
 S1(config-if)# switchport port-security maximum 3
 
-S1(config-if)# switchport port-security violation protect
+S1(config-if)# switchport port-security violation restrict
      
 ```
 
@@ -694,29 +694,18 @@ S1# **show port-security interface f0/6**
   
 
 ```
-Port Security : Enabled
-
-Port Status : Secure-up
-
-Violation Mode : Restrict
-
-Aging Time : 60 mins
-
-Aging Type : Inactivity
-
+Port Security              : Enabled
+Port Status                : Secure-up
+Violation Mode             : Restrict
+Aging Time                 : 60 mins
+Aging Type                 : Absolute
 SecureStatic Address Aging : Disabled
-
-Maximum MAC Addresses : 3
-
-Total MAC Addresses : 1
-
-Configured MAC Addresses : 0
-
-Sticky MAC Addresses : 0
-
-Last Source Address:Vlan : 0022.5646.3411:10
-
-Security Violation Count : 0
+Maximum MAC Addresses      : 3
+Total MAC Addresses        : 1
+Configured MAC Addresses   : 0
+Sticky MAC Addresses       : 0
+Last Source Address:Vlan   : 0060.5cdb.e5d0:10
+Security Violation Count   : 0
 ```     
 
 </details>
@@ -724,30 +713,24 @@ Security Violation Count : 0
        
 S1# **show port-security address**
 
-`               `Secure Mac Address Table
-
-\-----------------------------------------------------------------------------
-
-Vlan  Mac Address     Type      Ports            Remaining            Age
-
-`                                                                   `(mins)
-
-\---- ----------- ---- ----- -------------
-
-10 0022.5646.3411 SecureDynamic Fa0/6                                60 (I)
-
-\-----------------------------------------------------------------------------
-
-Total Addresses in System (excluding one mac per port) : 0
-
-Max Addresses limit in System (excluding one mac per port) : 8192
-
-c) Включим безопасность порта для Fa0/18 на S2. Настроим порт доступа таким образом, чтобы он автоматически добавлял адреса МАС, изученные на этом порту, в текущую конфигурацию.
+```
+                        Secure Mac Address Table
+-------------------------------------------------------------------------------------
+Vlan    Mac Address           Type                     Ports           Remaining Age
+                                                                          (mins)
+----    -----------           ----                     -----            -------------
+ 10	   0060.5CDB.E5D0	  DynamicConfigured	         FastEthernet0/6	   	    60 (I)
+-------------------------------------------------------------------------------------
+Total Addresses in System (excluding one mac per port)     : 0
+Max Addresses limit in System (excluding one mac per port) : 1024
+```
+     
+c) Включим теперь безопасность порта для Fa0/18 на S2. Настроим порт доступа таким образом, чтобы он автоматически добавлял адреса МАС, изученные на этом порту, в текущую конфигурацию.
      
      
  <details>
    
-   <summary> Включение режима безопасности для Fa0/18 на S2:</summary>
+   <summary> Включение режима безопасности с запоминанием МАС адресов для Fa0/18 на S2:</summary>
    
      
      ```
@@ -794,31 +777,18 @@ S2(config-if)# switchport port-security violation protect
  
 
 ```
-S2# **show port-security interface f0/18**
-
-Port Security : Enabled
-
-Port Status : Secure-up
-
-Violation Mode : Protect
-
-Aging Time : 60 mins
-
-Aging Type : Absolute
-
+Port Security              : Enabled
+Port Status                : Secure-up
+Violation Mode             : Protect
+Aging Time                 : 60 mins
+Aging Type                 : Absolute
 SecureStatic Address Aging : Disabled
-
-Maximum MAC Addresses : 2
-
-Total MAC Addresses : 1
-
-Configured MAC Addresses : 0
-
-Sticky MAC Addresses : 0
-
-Last Source Address:Vlan : 0022.5646.3413:10
-
-Security Violation Count : 0
+Maximum MAC Addresses      : 2
+Total MAC Addresses        : 1
+Configured MAC Addresses   : 0
+Sticky MAC Addresses       : 0
+Last Source Address:Vlan   : 000c.85b3.5d11:10
+Security Violation Count   : 0
 ```     
  
 </details>
@@ -826,23 +796,17 @@ Security Violation Count : 0
 
 S2# **show port-security address**
 
-`               `Secure Mac Address Table
-
-\-----------------------------------------------------------------------------
-
-Vlan Mac Address Type Ports Remaining Age
-
-`                                                                   `(mins)
-
-\---- ----------- ---- ----- -------------
-
-`  `10 0022.5646.3413 SecureSticky Fa0/18 -
-
-\-----------------------------------------------------------------------------
-
-Total Addresses in System (excluding one mac per port) : 0
-
-Max Addresses limit in System (excluding one mac per port) : 8192
+```
+                        Secure Mac Address Table
+-------------------------------------------------------------------------------------
+Vlan    Mac Address           Type                     Ports           Remaining Age
+                                                                          (mins)
+----    -----------           ----                     -----            -------------
+ 10	   000C.85B3.5D11	  DynamicConfigured	         FastEthernet0/18	   	    60 (I)
+-------------------------------------------------------------------------------------
+Total Addresses in System (excluding one mac per port)     : 0
+Max Addresses limit in System (excluding one mac per port) : 1024
+```     
      
 ### Шаг 5. **Реализовать безопасность DHCP snooping.**
      
