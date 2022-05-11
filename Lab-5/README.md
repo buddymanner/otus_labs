@@ -719,7 +719,7 @@ S1# **show port-security address**
 Vlan    Mac Address           Type                     Ports           Remaining Age
                                                                           (mins)
 ----    -----------           ----                     -----            -------------
- 10	   0060.5CDB.E5D0	  DynamicConfigured	         FastEthernet0/6	   	    60 (I)
+10	0060.5CDB.E5D0 DynamicConfigured	 FastEthernet0/6	     60 (I)
 -------------------------------------------------------------------------------------
 Total Addresses in System (excluding one mac per port)     : 0
 Max Addresses limit in System (excluding one mac per port) : 1024
@@ -802,7 +802,7 @@ S2# **show port-security address**
 Vlan    Mac Address           Type                     Ports           Remaining Age
                                                                           (mins)
 ----    -----------           ----                     -----            -------------
- 10	   000C.85B3.5D11	  DynamicConfigured	         FastEthernet0/18	   	    60 (I)
+ 10	000C.85B3.5D11 DynamicConfigured 	  FastEthernet0/18	    60 (I)
 -------------------------------------------------------------------------------------
 Total Addresses in System (excluding one mac per port)     : 0
 Max Addresses limit in System (excluding one mac per port) : 1024
