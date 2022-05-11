@@ -808,12 +808,34 @@ Total Addresses in System (excluding one mac per port)     : 0
 Max Addresses limit in System (excluding one mac per port) : 1024
 ```     
      
-### Шаг 5. **Реализовать безопасность DHCP snooping.**
+### Шаг 5. **Реализуем безопасность DHCP snooping.**
      
-   1. На S2 включите DHCP snooping и настройте DHCP snooping во VLAN 10.
-   1. Настройте магистральные порты на S2 как доверенные порты.
-   1. Ограничьте ненадежный порт Fa0/18 на S2 пятью DHCP-пакетами в секунду.
-   1. Проверка DHCP Snooping на S2.
+     
+   a) На S2 включите DHCP snooping и настройте DHCP snooping во VLAN 10.
+     
+   <details>
+    <summary> Включение DHCP Snooping на S2: </summary>
+       
+       S2#config t
+       S2(config)# ip dhcp snooping
+       S2(config)# ip dhcp snooping vlan 10
+            
+   </details>
+     
+   b) Настроим магистральные порты на S2 как доверенные порты:
+     
+  <details>
+   <summary> Настройка доверенных портов на S2: </summary>
+    
+      S2(config)# interface fа0/1
+      S2(config-if)# ip dhcp snooping trust  
+    
+   </details>  
+     
+   c) Ограничим ненадежный порт Fa0/18 на S2 пятью DHCP-пакетами в секунду.
+     
+     
+   d) Проверка DHCP Snooping на S2.
 
 S2# **show ip dhcp snooping**
 
@@ -872,7 +894,7 @@ MacIp адресAddress Lease(sec) Type VLAN Interface
 00:50:56:90:D0:8E 192.168.10.11 86213 dhcp-snooping 10 FastEthernet0/18
 
 Total number of bindings: 1
-1. ### **Реализация PortFast и BPDU Guard**
+### Шаг 6. **Реализация PortFast и BPDU Guard**
    1. Настройте PortFast на всех портах доступа, которые используются на обоих коммутаторах.
    1. Включите защиту BPDU на портах доступа VLAN 10 S1 и S2, подключенных к PC-A и PC-B.
    1. Убедитесь, что защита BPDU и PortFast включены на соответствующих портах.
@@ -894,7 +916,7 @@ S1# **show spanning-tree interface f0/6 detail**
 `   `Bpdu guard is enabled
 
 `   `BPDU: sent 128, received 0
-1. ### **Проверьте наличие сквозного ⁪подключения.**
+### Шаг 7. **Проверьте наличие сквозного ⁪подключения.**
 Проверьте PING свзяь между всеми устройствами в таблице IP-адресации. В случае сбоя проверки связи может потребоваться отключить брандмауэр на хостах.
 
 *Закройте окно настройки.*
