@@ -882,9 +882,44 @@ MacIp адресAddress Lease(sec) Type VLAN Interface
 
 Total number of bindings: 1
 ### Шаг 6. **Реализация PortFast и BPDU Guard**
-   1. Настройте PortFast на всех портах доступа, которые используются на обоих коммутаторах.
-   1. Включите защиту BPDU на портах доступа VLAN 10 S1 и S2, подключенных к PC-A и PC-B.
-   1. Убедитесь, что защита BPDU и PortFast включены на соответствующих портах.
+     
+1. Настроим PortFast на всех портах доступа, которые используются на обоих коммутаторах.
+     
+ <details>
+   <summary> Настройка функции PortFast на S1 и S2 соответственно: </summary>
+  
+```
+S1(config)# interface range f0/5 – 6
+S1(config-if)# spanning-tree portfast
+      
+--------------------------------------
+   
+S2(config)# interface f0/18
+S2(config-if)# spanning-tree portfast
+   
+```
+ </details>
+         
+2. Включим защиту BPDU на портах доступа VLAN 10 S1 и S2, подключенных к PC-A и PC-B.
+ 
+ <details>
+   <summary> Настройка функции PortFast на S1 и S2 соответственно: </summary>
+  
+```
+S1(config)# interface fa0/6
+
+S1(config-if)# spanning-tree bpduguard enable
+   
+------------------------------------------------- 
+
+S2(config)# interface fa0/18
+
+S2(config-if)# spanning-tree bpduguard enable
+   
+```
+ </details>    
+   
+3. Убедимся, что защита BPDU и PortFast включены на соответствующих портах.
 
 S1# **show spanning-tree interface f0/6 detail**
 
