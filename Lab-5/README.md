@@ -864,23 +864,27 @@ FastEthernet0/1            yes        unlimited
 ```
  </details>
 
-1. В командной строке на PC-B освободите, а затем обновите IP-адрес.
+e) В командной строке на PC-B освободите, а затем обновите IP-адрес.
 
 C:\Users\Student> **ipconfig /release**
 
 C:\Users\Student> **ipconfig /renew**
 
-1. Проверьте привязку отслеживания DHCP с помощью команды **show ip dhcp snooping binding**.
+f) Проверbv привязку отслеживания DHCP с помощью команды **show ip dhcp snooping binding**.
 
-S2# **show ip dhcp snooping binding** 
-
-MacIp адресAddress Lease(sec) Type VLAN Interface
-
-\------------------ --------------- ---------- ------------- ---- --------------------
-
-00:50:56:90:D0:8E 192.168.10.11 86213 dhcp-snooping 10 FastEthernet0/18
-
-Total number of bindings: 1
+S2# **show ip dhcp snooping binding:**
+     
+<details>
+   <summary> Вывод настроек DHCP Snooping на S2: </summary>
+  
+```     
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  -----------------
+00:0C:85:B3:5:11:10  192.168.10.11     86213     dhcp-snooping   10   FastEthernet0/18
+Total number of bindings: 0
+```
+ </details>
+     
 ### Шаг 6. **Реализация PortFast и BPDU Guard**
      
 1. Настроим PortFast на всех портах доступа, которые используются на обоих коммутаторах.
@@ -921,23 +925,25 @@ S2(config-if)# spanning-tree bpduguard enable
    
 3. Убедимся, что защита BPDU и PortFast включены на соответствующих портах.
 
-S1# **show spanning-tree interface f0/6 detail**
+S1# **show spanning-tree interface fa0/6 detail**
 
-` `Port 8 (FastEthernet0/6) of VLAN0010 is designated forwarding
-
-`   `Port path cost 19, Port priority 128, Port Identifier 128.6.
-
-`   `<output omitted for brevity>
-
-`   `Number of transitions to forwarding state: 1
-
-`   `The port is in the portfast mode
-
-`   `Link type is point-to-point by default
-
-`   `Bpdu guard is enabled
-
-`   `BPDU: sent 128, received 0
+<details>
+   <summary> Вывод настроек защиты для Fa0/6 на S1: </summary>
+  
+```
+Port 6 (FastEthernet0/6) of VLAN0010 is alternate listening
+  Port path cost 19, Port priority 128, Port Identifier 128.6
+  Designated root has priority 32778, address 0030.F22E.DA2D
+  Designated bridge has priority 32778, address 0030.F22E.DA2D
+  Timers: message age 16, forward delay 0, hold 0
+  Number of transitions to forwarding state: 1
+  The port is in the portfast mode
+  Link type is point-to-point by default
+```
+  
+  </details>
+  
+     
 ### Шаг 7. **Проверьте наличие сквозного ⁪подключения.**
 Проверьте PING свзяь между всеми устройствами в таблице IP-адресации. В случае сбоя проверки связи может потребоваться отключить брандмауэр на хостах.
 
